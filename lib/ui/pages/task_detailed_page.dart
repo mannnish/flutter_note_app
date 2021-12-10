@@ -1,34 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_note_app/core/controllers/note_controller.dart';
-import 'package:flutter_note_app/core/models/note_model.dart';
+import 'package:flutter_note_app/core/controllers/task_controller.dart';
+import 'package:flutter_note_app/core/models/tasks_model.dart';
 import 'package:flutter_note_app/ui/styles/colors.dart';
 import 'package:flutter_note_app/ui/styles/text_styles.dart';
 import 'package:flutter_note_app/ui/widgets/icon_button.dart';
 import 'package:get/get.dart';
 
-class NoteDetailPage extends StatelessWidget {
-  final Note note;
-  final _noteController = Get.find<NoteController>();
-  NoteDetailPage({@required this.note});
+class TaskDetailPage extends StatelessWidget {
+  final Task task;
+  final _taskController = Get.find<TaskController>();
+  TaskDetailPage({@required this.task});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: bgColor,
-      // TODO : Removed
-      // floatingActionButton: Padding(
-      //   padding: const EdgeInsets.all(12.0),
-      //   child: FloatingActionButton(
-      //     backgroundColor: Color(0xFF3B3B3B),
-      //     onPressed: () {
-      //       Get.to(() => RootPage(
-      //             isUpdate: true,
-      //             note: note,
-      //           ));
-      //     },
-      //     child: Icon(Icons.edit),
-      //   ),
-      // ),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.all(12.0),
+
+        // TODO : Removed
+        // child: FloatingActionButton(
+        //   backgroundColor: Color(0xFF3B3B3B),
+        //   onPressed: () {
+        //     Get.to(() => AddTaskPage(
+        //           isUpdate: true,
+        //           task: task,
+        //         ));
+        //   },
+        //   child: Icon(Icons.edit),
+        // ),
+      ),
       body: SafeArea(
         child: Column(
           children: [
@@ -55,7 +56,7 @@ class NoteDetailPage extends StatelessWidget {
           ),
           MyIconButton(
             onTap: () {
-              _deleteNoteFromDB();
+              _deleteTaskFromDB();
               Get.back();
             },
             icon: Icons.delete,
@@ -74,14 +75,7 @@ class NoteDetailPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              note.title,
-              style: titleTextStyle,
-            ),
-            const SizedBox(
-              height: 12,
-            ),
-            Text(note.date, style: dateTextStyle),
+            Text(task.date, style: dateTextStyle),
             const SizedBox(
               height: 12,
             ),
@@ -90,7 +84,7 @@ class NoteDetailPage extends StatelessWidget {
                 child: Column(
                   children: [
                     Text(
-                      note.note,
+                      task.task,
                       style: bodyTextStyle,
                     ),
                     const SizedBox(
@@ -106,7 +100,7 @@ class NoteDetailPage extends StatelessWidget {
     );
   }
 
-  _deleteNoteFromDB() async {
-    await _noteController.deleteNote(note: note);
+  _deleteTaskFromDB() async {
+    await _taskController.deleteTask(task: task);
   }
 }

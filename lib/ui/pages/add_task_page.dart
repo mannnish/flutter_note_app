@@ -1,33 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_note_app/core/controllers/note_controller.dart';
-import 'package:flutter_note_app/core/models/note_model.dart';
-import 'package:flutter_note_app/ui/pages/note.page.dart';
+import 'package:flutter_note_app/core/controllers/task_controller.dart';
+import 'package:flutter_note_app/core/models/tasks_model.dart';
+import 'package:flutter_note_app/ui/pages/task.page.dart';
 import 'package:flutter_note_app/ui/styles/colors.dart';
 import 'package:flutter_note_app/ui/styles/text_styles.dart';
 import 'package:flutter_note_app/ui/widgets/icon_button.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-class AddNotePage extends StatefulWidget {
+class AddTaskPage extends StatefulWidget {
   final bool isUpdate;
-  final Note note;
-  AddNotePage({this.isUpdate = false, this.note});
+  final Task task;
+  AddTaskPage({this.isUpdate = false, this.task});
 
   @override
-  _AddNotePageState createState() => _AddNotePageState();
+  _AddTaskPageState createState() => _AddTaskPageState();
 }
 
-class _AddNotePageState extends State<AddNotePage> {
-  TextEditingController _titleTextController = TextEditingController();
-  TextEditingController _noteTextController = TextEditingController();
-  final NoteController _noteController = Get.find<NoteController>();
+class _AddTaskPageState extends State<AddTaskPage> {
+  TextEditingController _taskTextController = TextEditingController();
+  final TaskController _taskController = Get.find<TaskController>();
   DateTime _currentDate = DateTime.now();
 
   @override
   void initState() {
     if (widget.isUpdate) {
-      _titleTextController.text = widget.note.title;
-      _noteTextController.text = widget.note.note;
+      _taskTextController.text = widget.task.task;
     }
     super.initState();
   }
@@ -78,28 +76,11 @@ class _AddNotePageState extends State<AddNotePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          TextFormField(
-            controller: _titleTextController,
-            style: titleTextStyle,
-            cursorColor: Colors.white,
-            maxLines: 3,
-            minLines: 1,
-            decoration: InputDecoration(
-              hintText: "Title",
-              hintStyle: titleTextStyle.copyWith(color: Colors.grey),
-              focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: bgColor),
-              ),
-              enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: bgColor),
-              ),
-            ),
-          ),
           const SizedBox(
             height: 12,
           ),
           TextFormField(
-            controller: _noteTextController,
+            controller: _taskTextController,
             style: bodyTextStyle,
             cursorColor: Colors.white,
             minLines: 3,
@@ -121,14 +102,13 @@ class _AddNotePageState extends State<AddNotePage> {
   }
 
   _validateInput() async {
-    bool isNotEmpty = _titleTextController.text.isNotEmpty && _noteTextController.text.isNotEmpty;
+    bool isNotEmpty = _taskTextController.text.isNotEmpty;
     if (isNotEmpty && !widget.isUpdate) {
-      _addNoteToDB();
+      _addTaskToDB();
       Get.back();
-    } else if (widget.isUpdate && _titleTextController.text != widget.note.title ||
-        _noteTextController.text != widget.note.note) {
-      _updateNote();
-      Get.offAll(() => NotesPage());
+    } else if (_taskTextController.text != widget.task.task) {
+      _updateTask();
+      Get.offAll(() => TasksPage());
     } else {
       Get.snackbar(
         widget.isUpdate ? "Not Updated" : "Required*",
@@ -139,22 +119,20 @@ class _AddNotePageState extends State<AddNotePage> {
     }
   }
 
-  _addNoteToDB() async {
-    await _noteController.addNote(
-      note: Note(
-        note: _noteTextController.text,
-        title: _titleTextController.text,
+  _addTaskToDB() async {
+    await _taskController.addTask(
+      task: Task(
+        task: _taskTextController.text,
         date: DateFormat.yMMMd().format(_currentDate).toString(),
       ),
     );
   }
 
-  _updateNote() async {
-    await _noteController.updateNote(
-      note: Note(
-        id: widget.note.id,
-        note: _noteTextController.text,
-        title: _titleTextController.text,
+  _updateTask() async {
+    await _taskController.updateTask(
+      task: Task(
+        id: widget.task.id,
+        task: _taskTextController.text,
         date: DateFormat.yMMMd().format(_currentDate).toString(),
       ),
     );

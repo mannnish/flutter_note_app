@@ -13,22 +13,22 @@ class NoteController extends GetxController {
   }
 
   Future<void> addNote({@required Note note}) async {
-    await DBHelper.insert(note);
+    await DBHelper.insertNote(note);
     getNotes();
   }
 
   Future<void> getNotes() async {
-    List<Map<String, dynamic>> notes = await DBHelper.query();
+    List<Map<String, dynamic>> notes = await DBHelper.queryNote();
     noteList.assignAll(notes.map((data) => Note.fromJson(data)).toList());
   }
 
   Future<void> deleteNote({@required Note note}) async {
-    await DBHelper.delete(note);
+    await DBHelper.deleteNote(note);
     getNotes();
   }
 
   Future<void> updateNote({@required Note note}) async {
-    await DBHelper.update(note);
+    await DBHelper.updateNote(note);
     getNotes();
   }
 }

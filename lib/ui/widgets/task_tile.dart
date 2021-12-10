@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_note_app/core/models/note_model.dart';
-import 'package:flutter_note_app/ui/pages/note_detailed_page.dart';
+import 'package:flutter_note_app/core/models/tasks_model.dart';
+import 'package:flutter_note_app/ui/pages/task_detailed_page.dart';
 import 'package:flutter_note_app/ui/styles/colors.dart';
 import 'package:flutter_note_app/ui/styles/text_styles.dart';
 import 'package:get/get.dart';
 
-enum TileType {
-  Square,
-  VerRect,
-  HorRect,
-}
+import 'note_tile.dart';
 
-class NoteTile extends StatelessWidget {
-  final Note note;
+// enum TileType {
+//   Square,
+//   VerRect,
+//   HorRect,
+// }
+
+class TaskTile extends StatelessWidget {
+  final Task task;
   final TileType tileType;
-  NoteTile({
-    @required this.note,
+  TaskTile({
+    @required this.task,
     @required this.tileType,
   });
 
@@ -24,16 +26,15 @@ class NoteTile extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Get.to(
-          () => NoteDetailPage(note: note),
+          () => TaskDetailPage(task: task),
           transition: Transition.leftToRight,
         );
       },
       child: Container(
-        // margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
         width: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: tileColors[note.id % 7],
+          color: tileColors[task.id % 7],
           borderRadius: BorderRadius.circular(8),
         ),
         child: Column(
@@ -42,7 +43,7 @@ class NoteTile extends StatelessWidget {
             Container(
               padding: tileType == TileType.HorRect ? const EdgeInsets.only(right: 100) : null,
               child: Text(
-                note.title,
+                task.task,
                 maxLines: _getMaxLines(tileType),
                 style: noteTitleTextStyle.copyWith(
                   fontSize: _getTxtSize(tileType),
@@ -54,7 +55,7 @@ class NoteTile extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Text(note.date, style: dateTextStyle.copyWith(color: Colors.black.withOpacity(0.7))),
+                Text(task.date, style: dateTextStyle.copyWith(color: Colors.black.withOpacity(0.7))),
               ],
             ),
           ],
